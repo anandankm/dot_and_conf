@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ -z "${1}" ]
+then
+    echo "Usage: gitadd <part-of-file-name>"
+    echo "Please use it under a git root directory"
+    exit 1
+fi
+part_file_name=${1}
+filepath=$(git st | grep modified | awk -F" " '{print $3}' | grep -i ${part_file_name})
+if [ ! -z "${filepath}" ]
+then
+    echo ${filepath} |
+    while read file
+    do
+        git add ${file}
+        echo "-------> Added file: ${file} to the current branch" 
+        git st
+    done
+else
+    line_num=$(git st | grep -n 'Untracked files' | awk -F":" '{print $1}')
+    line_num=$((${line_num} + 3))
+    git st | tail -n+${line_num} | grep '#' | awk -F" " '{print $2}' |
+    while read file
+    do
+        git add ${file}
+        echo "-------> Added file: ${file} to the current branch" 
+        git st
+    done
+fi

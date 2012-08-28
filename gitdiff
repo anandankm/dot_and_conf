@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -z "${1}" ]
+then
+    echo "Usage: gitdiff <part-of-file-name>"
+    echo "Please use it under a git root directory"
+    exit 1
+fi
+part_file_name=${1}
+filepath=$(git st | grep modified | awk -F" " '{print $3}' | grep -i ${1})
+if [ ! -z "${filepath}" ]
+then
+    git diff ${filepath}
+fi
