@@ -1,0 +1,44 @@
+#!/usr/bin/python
+
+# Author: Anandan andy.compeer@gmail.com
+#   1. Pass file as stdin
+#   2. The program looks for a numerically sorted data on first column
+#   3. There should not be any empty lines in the file
+#   4. Output: Mean, Median, First Quartile, Third Quartile, Standard Deviation
+
+from subprocess import Popen,PIPE
+import sys
+import os
+import math
+
+filename=sys.argv[1];
+p1 = Popen(["wc", "-l", filename], stdout=PIPE)
+nl = int(p1.communicate()[0].strip().split()[0])
+median=int(math.ceil(nl/2))
+tqnl=int(math.ceil(nl*3/4))
+fqnl=int(math.ceil(nl/4))
+cnt=0
+sum=0
+counts = {}
+for line in open(filename):
+    cnt += 1;
+    val = int(line.strip());
+    if (val in counts):
+        counts[val] += 1;
+    else:
+        counts[val] = 1;
+    sum += val;
+    if (cnt == fqnl):
+        fqnl=int(line.strip());
+    if (cnt == tqnl):
+        tqnl=int(line.strip());
+mean = sum/nl;
+sd = 0;
+for val in counts:
+    sd += math.pow((val - mean), 2)
+sd /= nl;
+print mean;
+print median
+print fqnl
+print tqnl
+print int(sd)
