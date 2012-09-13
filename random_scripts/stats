@@ -2,7 +2,7 @@
 
 # Author: Anandan andy.compeer@gmail.com
 #   1. Pass file as stdin
-#   2. The program looks for a numerically sorted data on first column
+#   2. The program looks for a numerically sorted data on first column (if multiple columns, separated by tab)
 #   3. There should not be any empty lines in the file
 #   4. Output: Mean, Median, First Quartile, Third Quartile, Standard Deviation
 
@@ -22,16 +22,16 @@ sum=0
 counts = {}
 for line in open(filename):
     cnt += 1;
-    val = int(line.strip());
+    val = int(line.strip().split()[0]);
     if (val in counts):
         counts[val] += 1;
     else:
         counts[val] = 1;
     sum += val;
     if (cnt == fqnl):
-        fqnl=int(line.strip());
+        fqnl=val;
     if (cnt == tqnl):
-        tqnl=int(line.strip());
+        tqnl=val;
 mean = sum/nl;
 sd = 0;
 for val in counts:
