@@ -37,8 +37,5 @@ sd = 0;
 for val in counts:
     sd += math.pow((val - mean), 2)
 sd /= nl;
-print mean;
-print median
-print fqnl
-print tqnl
-print int(sd)
+sd = math.sqrt(sd);
+print mean, "\t", median, "\t", fqnl, "\t", tqnl, "\t", int(sd)
