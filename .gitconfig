@@ -1,11 +1,13 @@
 [user]
-	name = andy 
-	email = anandan.rangasamy@escapemg.com
+    name = anandan
+    email = andy.compeer@gmail.com
 [color]
-	log = auto
-	diff = auto
-	status = auto
+    log = auto
+    diff = auto
+    status = auto
 [alias]
-	gr = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
-	st = status
+    gr = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
+    st = status
     pt = push origin refs/tags/*
+[core]
+    editor = vim
