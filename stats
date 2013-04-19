@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-# Author: Anandan andy.compeer@gmail.com
+# Author: Anandan - andy.compeer@gmail.com
+#                 - andy@grooveshark.com
 #   1. Pass file as stdin
 #   2. The program looks for a numerically sorted data on first column (if multiple columns, separated by tab)
 #   3. There should not be any empty lines in the file

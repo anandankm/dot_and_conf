@@ -1,5 +1,6 @@
 #!/bin/bash
 # Author: Anandan - andy@grooveshark.com
+#                 - andy.compeer@gmail.com
 
 . ~/bin/gs-specifics.sh
 

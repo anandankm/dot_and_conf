@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Author: Anandan - andy.compeer@gmail.com
+#                 - andy@grooveshark.com
 
 if [ -z "${1}" ]
 then

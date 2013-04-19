@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# Author: Anandan; andy.compeer@gmail.com
+# Author: Anandan - andy.compeer@gmail.com
+#                 - andy@grooveshark.com
 if [[ (-z "$1" || -z "$2" || -z "$3" || -z "$4") ]]
 then
     echo -e "\nUsage: merge_sort <filepath> <out-fields> <fields> <sort-options>\n\t<fields> are with respect to <out-fields>\n\t<filepath> is absolute\n\t<sort-options> without the '-'\n"
