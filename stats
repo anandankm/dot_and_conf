@@ -1,0 +1,49 @@
+#!/usr/bin/python
+
+# Author: Anandan andy.compeer@gmail.com
+#   1. Pass file as stdin
+#   2. The program looks for a numerically sorted data on first column (if multiple columns, separated by tab)
+#   3. There should not be any empty lines in the file
+#   4. Output: Mean, Median, First Quartile, Third Quartile, Standard Deviation
+
+from subprocess import Popen,PIPE
+import sys
+import os
+import math
+
+filename=sys.argv[1];
+p1 = Popen(["wc", "-l", filename], stdout=PIPE)
+nl = int(p1.communicate()[0].strip().split()[0])
+median = (nl+1)/2;
+if (nl%2 == 0):
+    m2 = median + 1;
+else:
+    m2 = median;
+tqnl=int(math.ceil(nl*3/4))
+fqnl=int(math.ceil(nl/4))
+cnt=0
+sum=0
+counts = {}
+for line in open(filename):
+    cnt += 1;
+    val = int(line.strip().split()[0]);
+    if (val in counts):
+        counts[val] += 1;
+    else:
+        counts[val] = 1;
+    sum += val;
+    if (cnt == fqnl):
+        fqnl=float(val);
+    if (cnt == tqnl):
+        tqnl=float(val);
+    if (cnt == median):
+        median=float(val);
+    if (cnt == m2):
+        median=float(val+median)/2;
+mean = float(sum)/float(nl);
+sd = 0;
+for val in counts:
+    sd += math.pow((val - mean), 2)
+sd /= nl;
+sd = math.sqrt(sd);
+print mean,"\t",median, "\t", fqnl, "\t", tqnl, "\t", sd
