@@ -2,7 +2,7 @@
 # Author: Anandan - andy@grooveshark.com
 #                 - andy.compeer@gmail.com
 
-. ~/bin/gs-specifics.sh
+. /home/data/bin/gs-specifics.sh
 
 function home_setup()
 {
@@ -53,7 +53,7 @@ function yesterday()
 
 function date2ts()
 {
-    date +"%s" --date="$1" 
+    date +"%s" --date="$1"
 }
 
 function ts2date()
@@ -84,7 +84,7 @@ function daydiff()
     echo $(($diff/86400))
 }
 
-# distance between dates 
+# distance between dates
 function daydiffmod()
 {
     diff=$(daydiff $1 $2)
@@ -130,7 +130,7 @@ runHiveSqlFile()
            logMsg "Running sudo -u hdfs hive query.."
            sudo -u hdfs sh -c "
            export HIVE_OPTS=\"$HIVE_OPTS $HIVE_CONF_STRING\";
-           hive -S -f "$1" 
+           hive -S -f "$1"
            " >> $logfile 2>$errorfile
         else
             logMsg "Running hive query into $2.."
@@ -164,7 +164,7 @@ function isInteger()
     then
         echo 0
     else
-        echo 1 
+        echo 1
     fi
 }
 
@@ -183,7 +183,6 @@ function errorlogMail()
 
 function checkError()
 {
-    echo "Entering"
     if [ $(fileSize "$errorfile") -gt 0 ]
     then
         cat $errorfile | logMsg;
@@ -224,7 +223,8 @@ function mysql_cmd()
     if [[ (-z "$1") || (-z "$2") || (-z "$3") || (-z "$4") || (-z "$5") ]]
     then
         logMsg "Please provide mysql credentials: <host> <user> <pass> <db> <query>."
-        exit 1 
+        exit 1
     fi
-    echo $5 | mysql -h"$1" -u"$2" -p"$3" $4 | tail -n+2
+    echo $5 | mysql -h"$1" -u"$2" -p"$3" $4 | tail -n+2 2>$errorfile
+    checkError
 }
