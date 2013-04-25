@@ -29,7 +29,8 @@ function logMsg()
 function mail()
 {
     subject="Mail from @script $HOME/$(basename $0)";
-    body="Mail from @script $home/$(basename $0)";
+    body="Mail from @script $HOME/$(basename $0)";
+    attachment=""
     if [ ! -z "$1" ]
     then
         subject=$1;
@@ -38,7 +39,16 @@ function mail()
     then
         body=$2;
     fi
-    echo -e $body | /bin/mail -s "$subject" "$email_to" -- -f $email_from
+    if [ ! -z "$3" ]
+    then
+        attachment=$3;
+    fi
+    if [[ (! -z "$attachment") && (-f $attachment) ]]
+    then
+        export EMAIL=$email_from && echo $body | mutt -a "$attachment" -s "$subject" -- $email_to
+    else
+        echo -e $body | /bin/mail -s "$subject" "$email_to" -- -f $email_from
+    fi
 }
 
 function today()
@@ -94,6 +104,38 @@ function daydiffmod()
     else
         echo $diff
     fi
+}
+
+# Return all the dates space separated
+# between the daterange <start-date> <end-date>
+# useful in a for loop
+# example: for i in daterange 2012-01-31 2012-01-04
+#          do
+#              echo $i
+#          done
+function daterange()
+{
+    if [[ -z $1 || -z $2 ]]
+    then
+        echo "daterange: please provide 2 date values"
+        echo "usage: daterange <start-date> <end-date>"
+        exit 1
+    fi
+    sdate=$1
+    edate=$2
+    diff=$(daydiff $1 $2)
+    if [ $diff -lt 0 ]
+    then
+       sdate=$2
+       edate=$1
+       diff=$[-1*$diff]
+    fi
+    result=$sdate
+    for ((i=0;i<$diff;i++))
+    do
+        result=$result" "$(dateNDays $sdate $[$i+1])
+    done
+    echo "$result"
 }
 
 # Run a hive query given a query string
