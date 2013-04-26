@@ -246,6 +246,17 @@ function checkError()
     fi
 }
 
+# Find the number of unique words in a file
+function uniq_words()
+{
+    if [[ (-z "$1") || (! -f $1) ]]
+    then
+        echo 0
+    else
+        echo $(awk '{for(i=1;i<=NF;i++){s[$i]=0;}}END{print length(s)}' $1)
+    fi
+}
+
 # Find the number of lines in a file
 function fileSize()
 {
