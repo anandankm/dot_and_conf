@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Author: Anandan - andy.compeer@gmail.com
+#                 - andy@grooveshark.com
+
+git log --since="yesterday" | grep "$(date +"%a %b%e")" | wc -l
