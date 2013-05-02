@@ -101,8 +101,19 @@ function daydiff()
 {
     dt1=$(date2ts $1)
     dt2=$(date2ts $2)
-    diff=$(($dt2-$dt1))
-    echo $(($diff/86400))
+    rem=$[($dt2 - $dt1) % 86400]
+    diff=$[($dt2 - $dt1) / 86400]
+    if [ $rem -ne 0 ]
+    then
+        if [ $diff -le 0 ]
+        then
+            echo $[$diff - 1]
+        else
+            echo $[$diff + 1]
+        fi
+    else
+        echo $diff
+    fi
 }
 
 # distance between dates
