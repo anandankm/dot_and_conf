@@ -15,6 +15,17 @@ function home_setup()
     email_from="anandan.rangasamy@localhost"
 }
 
+function append_pid()
+{
+    appendix=$1
+    if [ -z "$1" ]
+    then
+        appendix=$$
+    fi
+    errorfile=$errorfile"_$appendix"
+    logfile=$logfile"_$appendix"
+}
+
 function logMsg()
 {
    tme=$(date +"%Y-%m-%d %T");
