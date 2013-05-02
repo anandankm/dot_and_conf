@@ -129,22 +129,32 @@ function daterange()
     if [[ -z $1 || -z $2 ]]
     then
         echo "daterange: please provide 2 date values"
-        echo "usage: daterange <start-date> <end-date>"
+        echo "usage: daterange <start-date> <end-date> [<interval>]"
         exit 1
+    fi
+    interval=1
+    if [ ! -z $3 ]
+    then
+        if [ $3 -lt 0 ]
+        then
+            echo "Interval cannot be negative"
+            exit 1
+        fi
+        interval=$3
     fi
     sdate=$1
     edate=$2
-    diff=$(daydiff $1 $2)
+    diff=$[$(daydiff $1 $2)/$interval]
     if [ $diff -lt 0 ]
     then
-       sdate=$2
-       edate=$1
-       diff=$[-1*$diff]
+        interval=$[-1*$interval]
+        diff=$[-1*$diff]
     fi
     result=$sdate
     for ((i=0;i<$diff;i++))
     do
-        result=$result" "$(dateNDays $sdate $[$i+1])
+        sdate=$(dateNDays $sdate $interval)
+        result=$result" "$sdate
     done
     echo "$result"
 }
