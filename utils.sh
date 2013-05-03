@@ -22,8 +22,8 @@ function append_pid()
     then
         appendix=$$
     fi
-    errorfile=$errorfile"_$appendix"
-    logfile=$logfile"_$appendix"
+    logfile=$HOME/$(basename $0).log"_$appendix"
+    errorfile=$HOME/errorfile"_$appendix"
 }
 
 function logMsg()
