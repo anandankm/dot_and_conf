@@ -8,6 +8,7 @@ function home_setup()
 {
     HOME=$(dirname $(readlink -f $0))
     cd $HOME
+    appendix=""
     logdir=$HOME
     logfile=$logdir/$(basename $0).log
     errorfile=$logdir/errorfile
@@ -18,13 +19,30 @@ function home_setup()
 
 function append_pid()
 {
-    appendix=$1
     if [ -z "$1" ]
     then
         appendix=$$
+    else
+        appendix=$1
     fi
     logfile=$logdir/$(basename $0).log"_$appendix"
     errorfile=$logdir/errorfile"_$appendix"
+}
+
+function set_logdir()
+{
+    if [[ (! -z "$1") && (-d "$1") ]]
+    then
+        logdir=$1
+        if [ -z "$appendix" ]
+        then
+            logfile=$logdir/$(basename $0).log
+            errorfile=$logdir/errorfile
+        else
+            logfile=$logdir/$(basename $0).log"_$appendix"
+            errorfile=$logdir/errorfile"_$appendix"
+        fi
+    fi
 }
 
 function logMsg()
