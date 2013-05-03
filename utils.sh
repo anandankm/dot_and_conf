@@ -228,14 +228,22 @@ runHiveSqlFile()
         else
             logMsg "Running hive query into $2.."
             hive -S -f "$1" > $2 2>$errorfile
-            unwanted=$[ $(grep -n hiveconf $2 | tail -1 | awk -F":" '{print $1}') + 1 ]
-            if [ ! -z "$unwanted" ]
-            then
-                tail -n+$unwanted $2 > $2_
-                mv $2_ $2
-            fi
+            rm_hive_conf $2
         fi
         checkError
+    fi
+}
+
+function rm_hive_conf()
+{
+    if [ -f $1 ]
+    then
+        unwanted=$[ $(grep -n hiveconf $1 | tail -1 | awk -F":" '{print $1}') + 1 ]
+        if [ ! -z "$unwanted" ]
+        then
+            tail -n+$unwanted $1 > $1_
+            mv $1_ $1
+        fi
     fi
 }
 
