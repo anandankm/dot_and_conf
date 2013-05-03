@@ -8,8 +8,9 @@ function home_setup()
 {
     HOME=$(dirname $(readlink -f $0))
     cd $HOME
-    logfile=$HOME/$(basename $0).log
-    errorfile=$HOME/errorfile
+    logdir=$HOME
+    logfile=$logdir/$(basename $0).log
+    errorfile=$logdir/errorfile
     set -o pipefail
     email_to="andy@grooveshark.com"
     email_from="anandan.rangasamy@localhost"
@@ -22,8 +23,8 @@ function append_pid()
     then
         appendix=$$
     fi
-    logfile=$HOME/$(basename $0).log"_$appendix"
-    errorfile=$HOME/errorfile"_$appendix"
+    logfile=$logdir/$(basename $0).log"_$appendix"
+    errorfile=$logdir/errorfile"_$appendix"
 }
 
 function logMsg()
