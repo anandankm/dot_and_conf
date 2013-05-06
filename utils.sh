@@ -269,6 +269,37 @@ function rm_hive_conf()
     fi
 }
 
+### Check for bgpids set and wait for those
+### background jobs to complete
+###
+###  - Assumes bgpids the first value in colon [:]
+###    separated $bgpids
+###  - Assumes errorfiles are suffixed by the second
+###    value in colon [:] separated $bgpids
+
+function chk_bgjobs()
+{
+    for bgpid_v in $bgpids
+    do
+        bgpid=$(echo $bgpid_v | awk -F":" '{print $1}')
+        wait $bgpid
+        v=$(echo $bgpid_v | awk -F":" '{print $2}')
+        if [ $? -ne 0 ]
+        then
+            errf=$errorfile"_"$v
+            if [ -f $errf ]
+            then
+                logMsg "Error @$errf"
+                cat $errf | logMsg
+                subject="Error occurred @script $HOME/$(basename $0)";
+                mail "$subject" "$(cat $errf)"
+                > $errf
+            fi
+        fi
+        logMsg "Job done for pid $bgpid with info: [$bgpid_v]."
+    done
+}
+
 # Get owner name for a file/directory
 function getUser()
 {
