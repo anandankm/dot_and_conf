@@ -278,7 +278,6 @@ function errorlogMail()
         subject="Error occurred @script $HOME/$(basename $0)";
         mail "$subject" "$(cat $errorfile)"
         > $errorfile
-        exit 1;
     fi
 }
 
