@@ -37,10 +37,10 @@ function set_logdir()
         if [ -z "$appendix" ]
         then
             logfile=$logdir/$(basename $0).log
-            errorfile=$logdir/errorfile
+            errorfile=$logdir/$(basename $0).errorfile
         else
             logfile=$logdir/$(basename $0).log"_$appendix"
-            errorfile=$logdir/errorfile"_$appendix"
+            errorfile=$logdir/$(basename $0).errorfile"_$appendix"
         fi
     fi
 }
