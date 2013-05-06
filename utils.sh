@@ -25,8 +25,25 @@ function append_pid()
     else
         appendix=$1
     fi
-    logfile=$logdir/$(basename $0).log"_$appendix"
-    errorfile=$logdir/errorfile"_$appendix"
+    append_logfile $appendix
+    append_errfile $appendix
+}
+
+function append_logfile()
+{
+    if [ ! -z "$1" ]
+    then
+        logfile=$logdir/$(basename $0).log"_$1"
+    fi
+}
+
+
+function append_errfile()
+{
+    if [ ! -z "$1" ]
+    then
+        errorfile=$logdir/$(basename $0).errorfile"_$1"
+    fi
 }
 
 function set_logdir()
