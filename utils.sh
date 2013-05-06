@@ -8,7 +8,12 @@ function home_setup()
 {
     HOME=$(dirname $(readlink -f $0))
     cd $HOME
+    ## appendix for log and error files
     appendix=""
+    ## Initialize background process ids #bgpids
+    ## Append bgpids with pids, and other relevant info
+    ## separated by colon [:]
+    bgpids=""
     logdir=$HOME
     logfile=$logdir/$(basename $0).log
     errorfile=$logdir/$(basename $0).errorfile
