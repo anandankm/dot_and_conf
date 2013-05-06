@@ -11,7 +11,7 @@ function home_setup()
     appendix=""
     logdir=$HOME
     logfile=$logdir/$(basename $0).log
-    errorfile=$logdir/errorfile
+    errorfile=$logdir/$(basename $0).errorfile
     set -o pipefail
     email_to="andy@grooveshark.com"
     email_from="anandan.rangasamy@localhost"
