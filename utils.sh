@@ -335,7 +335,7 @@ function bg_hive()
                 exit 1;;
         esac
     done
-    if [ -z $in_file ]
+    if [ ! -z $in_file ]
     then
         if [[ (-z "$bg_ef_suffix") && (! -z $bg_options) ]]
         then
@@ -344,6 +344,10 @@ function bg_hive()
         if [ ! -z "$run_bg" ]
         then
             bg_ef_suffix="_$bg_ef_suffix"
+            if [ -z "$bg_options" ]
+            then
+                bg_options="$bg_ef_suffix"
+            fi
         fi
         if [ -z "$HIVE_CONF_STRING" ]
         then
@@ -355,23 +359,28 @@ function bg_hive()
         if [ -z "$out_file" ]
         then
             logMsg "Running sudo -u hdfs hive query.."
-            sudo -u hdfs sh -c "
-            export HIVE_OPTS=\"$HIVE_OPTS $HIVE_CONF_STRING\";
-            hive -S -f "$in_file"
-            " >> $logfile 2>$errorfile"$bg_ef_suffix" "$run_bg"
             if [ ! -z "$run_bg" ]
             then
+                sudo -u hdfs sh -c "
+                export HIVE_OPTS=\"$HIVE_OPTS $HIVE_CONF_STRING\";
+                hive -S -f "$in_file"
+                " >> $logfile 2>$errorfile"$bg_ef_suffix" &
                 bgpids=$bgpids" $!:$bg_options"
             else
+                sudo -u hdfs sh -c "
+                export HIVE_OPTS=\"$HIVE_OPTS $HIVE_CONF_STRING\";
+                hive -S -f "$in_file"
+                " >> $logfile 2>$errorfile"$bg_ef_suffix"
                 checkError
             fi
         else
             logMsg "Running hive query into $out_file.."
-            hive -S -f "$in_file" > $out_file 2>$errorfile"$bg_ef_suffix" "$run_bg"
             if [ ! -z "$run_bg" ]
             then
+                hive -S -f "$in_file" > $out_file 2>$errorfile"$bg_ef_suffix" &
                 bgpids=$bgpids" $!:$bg_options"
             else
+                hive -S -f "$in_file" > $out_file 2>$errorfile"$bg_ef_suffix"
                 rm_hive_conf $out_file
                 checkError
             fi
