@@ -42,7 +42,6 @@ function append_logfile()
     fi
 }
 
-
 function append_errfile()
 {
     if [ ! -z "$1" ]
@@ -102,6 +101,19 @@ function mail()
         echo -e $body | /bin/mail -s "$subject" "$email_to" -- -f $email_from
     fi
 }
+
+function is_SIGEXIT()
+{
+    stop_file=$@
+    if [[ (! -z "$stop_file") && (-f "$stop_file") ]]
+    then
+        if [ $(cat $stop_file) == "stop $$" ]
+        then
+            exit
+        fi
+    fi
+}
+
 
 function today()
 {
