@@ -269,6 +269,116 @@ function rm_hive_conf()
     fi
 }
 
+function bg_hive()
+{
+    us_str="
+        Usage:
+        runHiveSqlFile -i [Optional args]
+
+        Required Arguments:
+        -i  - Input file to be executed by hive
+
+        Optional Arguments:
+        -o       - Output file for hive to write
+        -b       - If the hive job needs to be a background job
+                   provide suffix for the errorfile with this option
+        --bgopts - Provide background options to be appended to
+                   background job pid [@bgpid] variable colon [:]
+                   separated. The first value will be appended to
+                   the error file specific to the background job.
+
+                   ";
+
+    ARGS=$(getopt -o i:o::b:: -l bgopts:: -n "bg_hive" -- "$@")
+    if [ $? -ne 0 ]
+    then
+        echo $us_str
+        unset ARGS
+        exit 1
+    fi
+    eval set -- "$ARGS"
+    unset ARGS
+    in_file=
+    out_file=
+    run_bg=""
+    bg_ef_suffix=
+    bg_options=
+    while true
+    do
+        case "$1" in
+            -i)
+                case "$2" in
+                    "") echo "$us_str";unset us_str;exit 2;shift 2;;
+                    *) in_file=$2 >&2;shift 2;;
+                esac;;
+            -o)
+                case "$2" in
+                    "") shift 2;;
+                    *) out_file=$2 >&2;shift 2;;
+                esac;;
+            -b)
+                run_bg="&";
+                case "$2" in
+                    "") shift 2;;
+                    *) bg_ef_suffix=$2 >&2;shift 2;;
+                esac;;
+            --bgopts)
+                run_bg="&";
+                case "$2" in
+                    "") shift 2;;
+                    *) bg_options=$2 >&2;shift 2;;
+                esac;;
+            --)
+                shift; break;;
+            *)
+                echo "$us_str"; unset us_str;
+                exit 1;;
+        esac
+    done
+    if [ -z $in_file ]
+    then
+        if [[ (-z "$bg_ef_suffix") && (! -z $bg_options) ]]
+        then
+            bg_ef_suffix=$(echo $bg_options | awk -F":" '{print $1}')
+        fi
+        if [ ! -z "$run_bg" ]
+        then
+            bg_ef_suffix="_$bg_ef_suffix"
+        fi
+        if [ -z "$HIVE_CONF_STRING" ]
+        then
+            # set HIVE_CONF_STRING variable
+            # e.g. HIVE_CONF_STRING="-hiveconf a=b -hiveconf c=d"
+            HIVE_CONF_STRING=""
+        fi
+        export HIVE_OPTS="$HIVE_CONF_STRING $HIVE_CONF_DEF_STRING"
+        if [ -z "$out_file" ]
+        then
+            logMsg "Running sudo -u hdfs hive query.."
+            sudo -u hdfs sh -c "
+            export HIVE_OPTS=\"$HIVE_OPTS $HIVE_CONF_STRING\";
+            hive -S -f "$in_file"
+            " >> $logfile 2>$errorfile"$bg_ef_suffix" "$run_bg"
+            if [ ! -z "$run_bg" ]
+            then
+                bgpids=$bgpids" $!:$bg_options"
+            else
+                checkError
+            fi
+        else
+            logMsg "Running hive query into $out_file.."
+            hive -S -f "$in_file" > $out_file 2>$errorfile"$bg_ef_suffix" "$run_bg"
+            if [ ! -z "$run_bg" ]
+            then
+                bgpids=$bgpids" $!:$bg_options"
+            else
+                rm_hive_conf $out_file
+                checkError
+            fi
+        fi
+    fi
+}
+
 ### Check for bgpids set and wait for those
 ### background jobs to complete
 ###
