@@ -102,6 +102,8 @@ function mail()
     fi
 }
 
+## Look for a given stop file for a graceful kill
+
 function is_SIGEXIT()
 {
     stop_file=$@
@@ -111,6 +113,25 @@ function is_SIGEXIT()
         then
             exit
         fi
+    fi
+}
+
+## Find the number of hours since the process id <proc_id>
+## was started
+
+function hrs_since()
+{
+    proc_id=$$
+    if [ ! -z $1 ]
+    then
+        proc_id=$1
+    fi
+    etime=$(ps -p $proc_id -o etime | tail -1 | sed -e 's/^ *//g' -e 's/ *$//g' | awk -F":" '{if(NF>2){print $1}}')
+    if [ ! -z $etime ]
+    then
+        echo $etime | awk -F"-" '{if(NF==2){print $1*24 + $2}else{print $1+0}}'
+    else
+        echo 0
     fi
 }
 
