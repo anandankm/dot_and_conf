@@ -273,7 +273,7 @@ function bg_hive()
 {
     us_str="
         Usage:
-        runHiveSqlFile -i [Optional args]
+        bg_hive -i [Optional args]
 
         Required Arguments:
         -i  - Input file to be executed by hive
