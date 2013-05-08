@@ -135,6 +135,31 @@ function hrs_since()
     fi
 }
 
+## Check for a file 'stop_file', for graceful kill
+## Execute the given command, and if it returns more than 0,
+## then return or wait for 1 more hour and check the result of the
+## command. This is recursive for only 10 hrs. Useful when used as a cron job
+## and needs to check for a precursor job completion.
+function check_sleep()
+{
+    is_SIGEXIT stop_file
+    cmd=$@
+    cnt=$($cmd)
+    if [ $cnt -gt 0 ]
+    then
+        return
+    else
+        if [ $(hrs_since) -gt 10 ]
+        then
+            logMsg "More than 10 hrs since starting this script. Quitting."
+            exit
+        else
+            logMsg "Sleeping for an hour"
+            sleep 1h
+            check_streams $cmd
+        fi
+    fi
+}
 
 function today()
 {
