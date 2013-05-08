@@ -518,7 +518,7 @@ function checkError()
     if [ $(fileSize "$errorfile") -gt 0 ]
     then
         cat $errorfile | logMsg;
-        err=$(cat errorfile)
+        err=$(cat $errorfile)
         > $errorfile
         # Check for stupid updated hive not using the latest hadoop rm -r
         if [[ ! "$err" =~ "rmr: DEPRECATED: Please use 'rm -r' instead." ]]
