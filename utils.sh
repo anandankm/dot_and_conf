@@ -145,7 +145,9 @@ function check_sleep()
     is_SIGEXIT stop_file
     cmd=$@
     cnt=$($cmd)
-    if [ $cnt -gt 0 ]
+    success=$?
+    is_int=$(isInteger $cnt)
+    if [[ ($is_int -eq 1 && $cnt -gt 0) || ($is_int -eq 0 && $success -eq 0) ]]
     then
         return
     else
