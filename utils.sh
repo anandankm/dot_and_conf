@@ -163,6 +163,13 @@ function check_sleep()
     fi
 }
 
+## Check if the script is provided with stdin
+
+function isstdin()
+{
+    [ -p /dev/fd/0 ] && echo 1 || echo 0
+}
+
 function today()
 {
     date +"%Y-%m-%d"
