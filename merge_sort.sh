@@ -16,6 +16,7 @@ function usage()
 
     "
 }
+
 function isstdin()
 {
     [ -p /dev/fd/0 ] && echo 1 || echo 0
@@ -26,6 +27,14 @@ sep=""
 args=""
 num=""
 tab=0
+num_rawin=0
+rawfiles=""
+tmp_dir="/tmp/merge_sort"
+if [ ! -d "$tmp_dir" ]
+then
+    mkdir $tmp_dir
+fi
+rawin=$tmp_dir/rawin
 for i in "$@"
 do
     case $i in
@@ -50,6 +59,20 @@ do
             args=$args" $i"
     esac
 done
+if [ ! -z $fname ]
+then
+    if [ -f $fname ]
+    then
+        cat $fname > $rawin
+    else
+        echo "Given file is not a regular file"
+        exit
+    fi
+fi
+if [ -p /dev/fd/0 ]
+then
+    cat - > $rawin
+fi
 if [[ ! -z $num && $num == "yes" ]]
 then
     args=$args" -n"
@@ -59,40 +82,37 @@ then
     tab=1
 fi
 
-num_rawin=0
-rawfiles=""
-tmp_dir="/tmp/merge_sort"
-if [ ! -d "$tmp_dir" ]
-then
-    mkdir $tmp_dir
-fi
-rawin=$tmp_dir/rawin
+size=$(wc -l $rawin | awk '{print $1}')
+qt=$[ $size / 10000 ]
+rem=$[ $size % 10000 ]
 
-function getlines()
+function csort()
 {
-    for((;;))
-    do
-        rf=$rawin"_$num_rawin"
-        head -10000 - >$rf
-        num_rawin=$[$num_rawin + 1]
-        if [ $(wc -l $rf | awk '{print $1}') -eq 0 ]
+    echo $args
+    echo $tab
+    if [[ ! -z $1 && -f $1 ]]
+    then
+        if [ $tab -eq 1 ]
         then
-            rm $rf
-            break
+            sort -t'	' $args $1 > $1"_"
         else
-            if [ $tab -eq 1 ]
-            then
-                sort -t'	' $args $rf > $rf"_"
-            else
-                sort $args $rf > $rf"_"
-            fi
-            mv $rf"_" $rf
-            rawfiles=$rawfiles" $rf"
+            sort $args $rf > $1"_"
         fi
-    done
+        mv $1"_" $1
+        rawfiles=$rawfiles" $1"
+    fi
 }
 
-if [ -p /dev/fd/0 ]
+if [[ $qt -eq 0  && $rem -ne 0 ]]
 then
-    getlines
+    csort $rawin
+    cat $rawin
+    rm $rawin*
+    exit
 fi
+if [ $rem -ne 0 ]
+then
+    qt=$[$qt + 1]
+fi
+echo $qt
+#split -a ${#qt} -l 10000
