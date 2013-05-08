@@ -2,38 +2,97 @@
 #
 # Author: Anandan - andy.compeer@gmail.com
 #                 - andy@grooveshark.com
-if [[ (-z "$1" || -z "$2" || -z "$3" || -z "$4") ]]
+function usage()
+{
+    echo -e "
+    Usage: ./merge_sort [--file=<filename>] [--sep=<separator>] [sort_options]
+
+    Options:
+
+    --file     - filename to be sorted
+    --sep      - delimitor or field separator for sorting
+    --num      - numerical-sort
+    sort_options - normal options for sort [Check out 'man sort']
+
+    "
+}
+function isstdin()
+{
+    [ -p /dev/fd/0 ] && echo 1 || echo 0
+}
+
+fname=""
+sep=""
+args=""
+num=""
+tab=0
+for i in "$@"
+do
+    case $i in
+        --file=*)
+            fname=${i#--} ## Strip option prefix
+            value=${fname#*=} ## value is whatever after the first =
+            declare fname="$value"
+            ;;
+        --sep=*)
+            sep=${i#--} ## Strip option prefix
+            value=${sep#*=} ## value is whatever after the first =
+            declare sep="$value"
+            ;;
+        --num)
+            declare num="yes"
+            ;;
+        -t)
+            ;;
+        -n)
+            ;;
+        *)
+            args=$args" $i"
+    esac
+done
+if [[ ! -z $num && $num == "yes" ]]
 then
-    echo -e "\nUsage: merge_sort <filepath> <out-fields> <fields> <sort-options>\n\t<fields> are with respect to <out-fields>\n\t<filepath> is absolute\n\t<sort-options> without the '-'\n"
-    exit 1
+    args=$args" -n"
+fi
+if [[ ! -z $sep && $sep == "tab" ]]
+then
+    tab=1
 fi
 
-if [ ! -f "$1" ]
-then
-    echo "File doesn't exist: $1"
-fi
-
-fields=$2
-out_fields=$3
+num_rawin=0
+rawfiles=""
 tmp_dir="/tmp/merge_sort"
 if [ ! -d "$tmp_dir" ]
 then
     mkdir $tmp_dir
 fi
+rawin=$tmp_dir/rawin
 
-cd $tmp_dir
-raw_in=$tmp_dir"/raw_input";
+function getlines()
+{
+    for((;;))
+    do
+        rf=$rawin"_$num_rawin"
+        head -10000 - >$rf
+        num_rawin=$[$num_rawin + 1]
+        if [ $(wc -l $rf | awk '{print $1}') -eq 0 ]
+        then
+            rm $rf
+            break
+        else
+            if [ $tab -eq 1 ]
+            then
+                sort -t'	' $args $rf > $rf"_"
+            else
+                sort $args $rf > $rf"_"
+            fi
+            mv $rf"_" $rf
+            rawfiles=$rawfiles" $rf"
+        fi
+    done
+}
 
-if [ "$3" == "all" ]
+if [ -p /dev/fd/0 ]
 then
-    raw_in=$1
-else
-    cut -f$3 $1 > $raw_in
-fi
-lc=$[ $(wc -l $raw_in | awk '{print $1}')/1000 ]
-if [ $lc -gt 0 ]
-then
-    split -l 1000 -a ${#lc} $raw_in
-else
-    sort -$4 $raw_in
+    getlines
 fi
