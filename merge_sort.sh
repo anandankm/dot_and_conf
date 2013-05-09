@@ -2,7 +2,14 @@
 #
 # Author: Anandan - andy.compeer@gmail.com
 #                 - andy@grooveshark.com
-
+##
+# Results:
+#   With 2 million rows, 8 core, 64G ram
+#     Normal sort takes 100 secs, while
+#     this merge sort takes 158 secs.
+#     Still needs improvement.
+#
+##
 function usage()
 {
     echo -e "
