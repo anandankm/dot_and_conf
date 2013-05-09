@@ -2,6 +2,7 @@
 #
 # Author: Anandan - andy.compeer@gmail.com
 #                 - andy@grooveshark.com
+
 function usage()
 {
     echo -e "
@@ -33,6 +34,7 @@ tmp_dir="/tmp/merge_sort"
 if [ ! -d "$tmp_dir" ]
 then
     mkdir $tmp_dir
+    rm -rf $tmp_dir/*
 fi
 rawin=$tmp_dir/rawin
 for i in "$@"
@@ -83,20 +85,18 @@ then
 fi
 
 size=$(wc -l $rawin | awk '{print $1}')
-qt=$[ $size / 10000 ]
-rem=$[ $size % 10000 ]
+qt=$[ $size / 100000 ]
+rem=$[ $size % 100000 ]
 
 function csort()
 {
-    echo $args
-    echo $tab
     if [[ ! -z $1 && -f $1 ]]
     then
         if [ $tab -eq 1 ]
         then
             sort -t'	' $args $1 > $1"_"
         else
-            sort $args $rf > $1"_"
+            sort $args $1 > $1"_"
         fi
         mv $1"_" $1
         rawfiles=$rawfiles" $1"
@@ -107,12 +107,26 @@ if [[ $qt -eq 0  && $rem -ne 0 ]]
 then
     csort $rawin
     cat $rawin
-    rm $rawin*
+    rm -rf $rawin*
     exit
 fi
 if [ $rem -ne 0 ]
 then
     qt=$[$qt + 1]
 fi
-echo $qt
-#split -a ${#qt} -l 10000
+split_dir=$rawin"_split"
+mkdir -p $split_dir
+rm -rf $split_dir/*
+cd $split_dir
+split -d -a ${#qt} -l 100000 $rawin
+for i in $(ls)
+do
+    csort $i
+done
+if [ $tab -eq 1 ]
+then
+    sort -t'	' -m $args $rawfiles
+else
+    sort -m $args $rawfiles
+fi
+rm -rf $rawin*
