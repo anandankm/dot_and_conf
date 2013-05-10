@@ -96,7 +96,7 @@ function mail()
     fi
     if [[ (! -z "$attachment") && (-f $attachment) ]]
     then
-        export EMAIL=$email_from && echo $body | mutt -a "$attachment" -s "$subject" -- $email_to
+        export EMAIL=$email_from && echo -e $body | mutt -a "$attachment" -s "$subject" -- $email_to
     else
         echo -e $body | /bin/mail -s "$subject" "$email_to" -- -f $email_from
     fi
