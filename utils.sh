@@ -465,25 +465,35 @@ function bg_hive()
 
 function chk_bgjobs()
 {
+    error_occ=0
     for bgpid_v in $bgpids
     do
         bgpid=$(echo $bgpid_v | awk -F":" '{print $1}')
         wait $bgpid
+        exitcd=$?
         v=$(echo $bgpid_v | awk -F":" '{print $2}')
-        if [ $? -ne 0 ]
+        if [ $exitcd -ne 0 ]
         then
             errf=$errorfile"_"$v
-            if [ -f $errf ]
+            if [[ (-f $errf) && ($(fileSize $errf) -gt 0) ]]
             then
-                logMsg "Error @$errf"
-                cat $errf | logMsg
-                subject="Error occurred @script $HOME/$(basename $0)";
-                mail "$subject" "$(cat $errf)"
-                > $errf
+                if [[ ! "$(cat $errf)" =~ "rmr: DEPRECATED: Please use 'rm -r' instead." ]]
+                then
+                    logMsg "Error @$errf"
+                    cat $errf | logMsg
+                    subject="Error occurred @script $HOME/$(basename $0)";
+                    mail "$subject" "$(cat $errf)"
+                    > $errf
+                    error_occ=1
+                fi
             fi
         fi
         logMsg "Job done for pid $bgpid with info: [$bgpid_v]."
     done
+    if [ $error_occ -eq 1 ]
+    then
+        exit
+    fi
 }
 
 # Get owner name for a file/directory
