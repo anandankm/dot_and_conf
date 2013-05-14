@@ -432,7 +432,9 @@ function bg_hive()
                 export HIVE_OPTS=\"$HIVE_OPTS $HIVE_CONF_STRING\";
                 hive -S -f "$in_file"
                 " >> $logfile 2>$errorfile"$bg_ef_suffix" &
-                bgpids=$bgpids" $!:$bg_options"
+                hivepid=$!
+                logMsg "Hive pid: $hivepid"
+                bgpids=$bgpids" $hivepid:$bg_options"
             else
                 sudo -u hdfs sh -c "
                 export HIVE_OPTS=\"$HIVE_OPTS $HIVE_CONF_STRING\";
@@ -445,7 +447,9 @@ function bg_hive()
             if [ ! -z "$run_bg" ]
             then
                 hive -S -f "$in_file" > $out_file 2>$errorfile"$bg_ef_suffix" &
-                bgpids=$bgpids" $!:$bg_options"
+                hivepid=$!
+                logMsg "Hive pid: $hivepid"
+                bgpids=$bgpids" $hivepid:$bg_options"
             else
                 hive -S -f "$in_file" > $out_file 2>$errorfile"$bg_ef_suffix"
                 rm_hive_conf $out_file
