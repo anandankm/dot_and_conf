@@ -20,6 +20,7 @@ function home_setup()
     set -o pipefail
     email_to="andy@grooveshark.com"
     email_from="anandan.rangasamy@localhost"
+    setDBVars
 }
 
 function append_pid()
@@ -99,6 +100,32 @@ function mail()
         export EMAIL=$email_from && echo -e $body | mutt -a "$attachment" -s "$subject" -- $email_to
     else
         echo -e $body | /bin/mail -s "$subject" "$email_to" -- -f $email_from
+    fi
+}
+
+# Utilize 'jq' - a light weight shell json parser
+# @http://stedolan.github.io/jq/
+
+function pjson()
+{
+    if [ -z $1 ]
+    then
+        echo "Please provide a json file to parse"
+        exit 1
+    fi
+    fjson=$1
+    shift
+    if [ -z $(which jq) ]
+    then
+        echo "Please include 'jq' json parser in your path"
+        echo "You can download it from http://stedolan.github.io/jq/"
+        exit 1
+    fi
+    if [ ! -z "$@" ]
+    then
+        cat $fjson | jq -r "$@"
+    else
+        cat $fjson | jq -r "."
     fi
 }
 
