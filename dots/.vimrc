@@ -42,4 +42,5 @@ map <F4> :s/\(    private \(\S*\) \(\S\)\(\w*\).*;\n\)/\1    public void set\U\3
 map <F3> vwODOD"+y :vimgrep "public class +" ./**/*.java ~/Downloads/ingestion/framework/src/java/**/*.java<CR>
 filetype plugin indent on
 let NERDTreeShowHidden=1
-map <s-tab> :s/\(\s\\|\S\)/    \1/<CR>
+map <tab> :s/\(\s\\|\S\)/    \1/<CR>
+map <s-tab> :s/^    //<CR>
