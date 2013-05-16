@@ -16,3 +16,4 @@
     pt = push origin refs/tags/*
 [core]
     editor = vim
+    autocrlf = input
