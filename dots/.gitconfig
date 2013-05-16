@@ -6,6 +6,10 @@
     diff = auto
     status = auto
     branch = auto
+[color "status"]
+    added = green
+    changed = red bold
+    untracked = magenta bold
 [alias]
     gr = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
     st = status
