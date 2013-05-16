@@ -11,7 +11,7 @@
     changed = red bold
     untracked = magenta bold
 [alias]
-    gr = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
+    gr = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s%x20%x1b[32m(%cN%x20%ar)"
     st = status
     pt = push origin refs/tags/*
 [core]
