@@ -38,7 +38,7 @@ map [1;2A OA
 "map <s-down> <C-W><down>
 map [1;2B OB
 map <F2> :NERDTreeToggle<CR>
-map <F4> :s/\(    private \(\S*\) \(\S\)\(\w*\).*;\n\)/\1    public void set\U\3\E\4(\2 \3\4) { this.\3\4 = \3\4; }\r    public \2 get\U\3\E\4() { return this.\3\4; }\r/<CR>
+map <F4> :s/\(    \(protected\|private\) \(\S*\) \(\S\)\(\w*\).*;\n\)/\1    public void set\U\3\E\4(\2 \3\4) {\r        this.\3\4 = \3\4;\r    }\r    public \2 get\U\3\E\4() {\r        return this.\3\4;\r    }\r/<CR>
 map <F3> vwODOD"+y :vimgrep "public class +" ./**/*.java ~/Downloads/ingestion/framework/src/java/**/*.java<CR>
 filetype plugin indent on
 let NERDTreeShowHidden=1
