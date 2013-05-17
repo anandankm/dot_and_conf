@@ -185,7 +185,7 @@ function check_sleep()
         else
             logMsg "Sleeping for an hour"
             sleep 1h
-            check_streams $cmd
+            check_sleep $cmd
         fi
     fi
 }
