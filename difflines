@@ -9,5 +9,6 @@ then
 fi
 sed -n "$1"p $3 >/tmp/diff-file1
 sed -n "$2"p $4 >/tmp/diff-file2
-diff /tmp/diff-file1 /tmp/diff-file2
+shift;shift;shift;shift
+diff "$@" /tmp/diff-file1 /tmp/diff-file2
 rm -rf /tmp/diff-file*
