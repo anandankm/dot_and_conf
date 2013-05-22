@@ -17,3 +17,9 @@
 [core]
     editor = vim
     autocrlf = input
+[pull]
+    rebase = true
+[branch]
+    autosetuprebase = always
+[push]
+    default = tracking
