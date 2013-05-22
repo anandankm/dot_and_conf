@@ -1,0 +1,13 @@
+#!/bin/bash
+# Author: Anandan - andy@grooveshark.com
+#                 - andy.compeer@gmail.com
+
+usage="difflines <file1-lines> <file2-lines> <file1> <file2>"
+if [[ (-z "$@" ) || (-z "$1") ||  (-z "$2") || (-z "$3") || (-z "$4") ]]
+then
+    echo -e $usage
+fi
+sed -n "$1"p $3 >/tmp/diff-file1
+sed -n "$2"p $4 >/tmp/diff-file2
+diff /tmp/diff-file1 /tmp/diff-file2
+rm -rf /tmp/diff-file*
