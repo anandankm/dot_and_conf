@@ -2,7 +2,7 @@
 # Author: Anandan - andy@grooveshark.com
 #                 - andy.compeer@gmail.com
 
-usage="difflines <file1-lines> <file2-lines> <file1> <file2>"
+usage="difflines <file1-lines> <file2-lines> <file1> <file2> [<diff-args>]"
 if [[ (-z "$@" ) || (-z "$1") ||  (-z "$2") || (-z "$3") || (-z "$4") ]]
 then
     echo -e $usage
