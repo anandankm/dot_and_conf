@@ -305,6 +305,56 @@ function daterange()
     echo "$result"
 }
 
+function datecouples()
+{
+    if [[ -z $1 || -z $2 ]]; then
+        echo "mdaterange: please provide 2 date values"
+        echo "usage: mdaterange <start-date> <end-date> [<interval>]"
+        exit 1
+    fi
+    local -i interval=1
+    if [ ! -z $3 ]; then
+        if [ $3 -lt 0 ]; then
+            echo "Interval cannot be negative"
+            exit 1
+        fi
+        interval=$3
+    fi
+    local sdate=$1
+    local -i diff=$(daydiff $1 $2)/$interval
+    if [ $diff -eq 0 ]; then
+        echo $1_$2
+        return
+    fi
+    local -i next=1
+    if [ $diff -lt 0 ]; then
+        next=-1
+        interval=-1*$interval
+        diff=-1*$diff
+    fi
+    local edate=$(dateNDays $sdate $interval)
+    local result=$sdate"_"$edate
+    for ((i=0;i<$diff;i++)); do
+        sdate=$(dateNDays $edate $next)
+        edate=$(dateNDays $sdate $interval)
+        if [ $sdate == $2 ]; then
+            result=$result" "$sdate"_"$sdate
+            break
+        fi
+        local -i v=$next*$(daydiff $2 $sdate)
+        if [ $v -ge 0 ]; then
+            break
+        fi
+        v=$next*$(daydiff $2 $edate)
+        if [ $v -ge 0 ]; then
+            result=$result" "$sdate"_"$2
+            break
+        fi
+        result=$result" "$sdate"_"$edate
+    done
+    echo "$result"
+}
+
 # Run a hive query given a query string
 runHive()
 {
