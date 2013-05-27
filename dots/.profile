@@ -21,4 +21,4 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-PS1="[\u@\h \W]$ "
+PS1="[\u@\h:\W] $ "
