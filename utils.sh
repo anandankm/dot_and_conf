@@ -133,11 +133,14 @@ function pjson()
 
 function is_SIGEXIT()
 {
-    stop_file=$@
+    local stop_file=$@
     if [[ (! -z "$stop_file") && (-f "$stop_file") ]]
     then
-        if [ $(cat $stop_file) == "stop $$" ]
+        local sig="stop$$"
+        local sigs=$(cat $stop_file | sed 's/ //g')
+        if [ "$sigs" == "$sig" ]
         then
+            logMsg "stop_file contains $sigs"
             exit
         fi
     fi
@@ -183,8 +186,8 @@ function check_sleep()
             logMsg "More than 10 hrs since starting this script. Quitting."
             exit
         else
-            logMsg "Sleeping for an hour"
-            sleep 1h
+            logMsg "Sleeping for an half hour"
+            sleep 30m
             check_sleep $cmd
         fi
     fi
