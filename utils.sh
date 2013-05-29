@@ -151,12 +151,12 @@ function is_SIGEXIT()
 
 function hrs_since()
 {
-    proc_id=$$
+    local proc_id=$$
     if [ ! -z $1 ]
     then
         proc_id=$1
     fi
-    etime=$(ps -p $proc_id -o etime | tail -1 | sed -e 's/^ *//g' -e 's/ *$//g' | awk -F":" '{if(NF>2){print $1}}')
+    local etime=$(ps -p $proc_id -o etime | tail -1 | sed -e 's/^ *//g' -e 's/ *$//g' | awk -F":" '{if(NF>2){print $1}}')
     if [ ! -z $etime ]
     then
         echo $etime | awk -F"-" '{if(NF==2){print $1*24 + $2}else{print $1+0}}'
