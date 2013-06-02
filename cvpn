@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Author: Anandan - andy.compeer@gmail.com
+#                 - andy@grooveshark.com
+
+VPN_NAME=""
+if [ -z "$1" ]
+then
+    VPN_NAME=$1
+fi
+UUID=$(nmcli con list | grep -i "$VPN_NAME.*vpn" | awk '{print $2}')
+nmcli con up uuid $UUID
