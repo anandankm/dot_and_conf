@@ -21,4 +21,4 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-PS1="[\u@\h:\W] $ "
+PS1="[\e[1;34m\u@\h:\W\e[m] \e[1;32m$\e[m "
