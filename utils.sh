@@ -550,6 +550,7 @@ function bg_hive()
 function chk_bgjobs()
 {
     error_occ=0
+    logMsg "Waiting for background jobs to complete"
     for bgpid_v in $bgpids
     do
         bgpid=$(echo $bgpid_v | awk -F":" '{print $1}')
