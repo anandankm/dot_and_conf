@@ -564,7 +564,7 @@ function chk_bgjobs()
             then
                 if [[ ! "$(cat $errf)" =~ "rmr: DEPRECATED: Please use 'rm -r' instead." ]]
                 then
-                    logMsg "Error @$errf"
+                    logMsg "Error (pid:$bgpid) @$errf"
                     cat $errf | logMsg
                     subject="Error occurred @script $HOME/$(basename $0)";
                     mail "$subject" "$(cat $errf)"
