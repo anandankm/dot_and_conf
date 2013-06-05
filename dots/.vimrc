@@ -14,7 +14,6 @@ set term=xterm
 set mouse=a
 set tabstop=4
 set shiftwidth=4
-set textwidth=80
 set makeprg=ant
 set efm=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
 set background=dark
