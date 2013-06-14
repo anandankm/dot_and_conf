@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Author: Anandan - andy.compeer@gmail.com
+#                 - andy@grooveshark.com
+
+if [ -z "${1}" ]
+then
+    echo "Usage: dos2unix <directory-path>"
+    exit 1
+fi
+for i in $(find ${1} -iname \*.* | grep -v 'swp\|git\|class' | grep -v '^.$' | grep -v '^./$')
+do
+    tr -d '\15\32' < $i > $i.tr
+    mv $i.tr $i
+done
