@@ -578,7 +578,7 @@ function chk_bgjobs()
     if [ $error_occ -eq 1 ]
     then
         logMsg "Error occurred while checking bg jobs. Exitting script."
-        exit
+        exit 1
     fi
 }
 
