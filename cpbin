@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Author: Anandan - andy.compeer@gmail.com
+#                 - andy@grooveshark.com
+WD=$(dirname $(readlink -f $0))
+cd $WD
+ls -l $WD | grep ^-rwx | awk '{print $NF}' | xargs -I {} cp {} /usr/local/bin
