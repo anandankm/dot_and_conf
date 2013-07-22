@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# Author: Anandan - andy.compeer@gmail.com
+#                 - andy@grooveshark.com
+
+if [ -z $1 ]
+then
+    echo "Provide a file to shuffle"
+    exit 1
+fi
+if [ ! -f $1 ]
+then
+    echo "$1 is not a file"
+    exit 1
+fi
+outfile=$1"_shuffled"
+echo "Storing shuffled lines in the file: $outfile"
+awk '{print rand()*100":"$0}' $1 | sort -t":" -k1,1 | cut -d: -f2 > $outfile
