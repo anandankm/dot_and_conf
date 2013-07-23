@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# Author: Anandan - andy.compeer@gmail.com
+#                 - andy@grooveshark.com
+
+if [[ (-z $1) || (-z $2) || (! -f $1) || (! -f $2) ]]
+then
+    echo "Provide 2 files to check if 2nd file value exists in 1st"
+    echo "Usage: map_contains <small-file> <big-file>"
+    exit 1
+fi
+awk -v sf=$1 '
+BEGIN {
+while(getline line < sf)
+    a[line] = 1;
+}
+{
+  if(a[$0]==1) {
+    print $0
+  }
+}
+' $2
