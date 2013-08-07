@@ -17,6 +17,7 @@ set shiftwidth=4
 set makeprg=ant
 set efm=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
 set background=dark
+let g:NERDTreeDirArrows=0
 
 "map <C-left> <C-left> ==> to accomplish in screen mode
 "map [1;5D <C-left>
