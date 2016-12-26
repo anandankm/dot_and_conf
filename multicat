@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+if [ -z "$1" ]
+then
+    echo "Provide input file"
+    exit 1
+fi
+if [ -z "$2" ]
+then
+    echo "Provide size expected in MB"
+    exit 1
+fi
+if [ -z "$3" ]
+then
+    outfile="output"
+else
+    outfile=$3
+fi
+fname=$1;
+if [ ! -f $fname ]
+then
+    echo "No such file: $fname"
+    exit 1
+fi
+szeExp=$2;
+currSzeStr=$(du -sb $fname | awk -F"\t" '{print $1}');
+currSze=0
+if [ ! -z "$currSzeStr" ]
+then
+    currSze=$currSzeStr
+else
+    echo "Cannot find file size: $fname"
+fi
+szeExpCalc=$(($szeExp*1024*1024/$currSze))
+catstr="$fname"
+for i in $(seq 1 $szeExpCalc)
+do
+    catstr="$catstr $fname"
+done
+cat $catstr > $outfile

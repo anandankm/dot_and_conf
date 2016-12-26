@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# Author: Anandan - andy.compeer@gmail.com
+#                 - arangasa@mathworks.com
+GREP_DIR="$(pwd)"
+if [ ! -z "$1" ]
+then
+    GREP_DIR=$1
+fi
+grep --color='auto' -RPn "[\x80-\xFF]" ${GREP_DIR}
