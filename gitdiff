@@ -10,8 +10,10 @@ then
     exit 1
 fi
 part_file_name=${1}
-filepath=$(git st | grep modified | awk -F" " '{print $3}' | grep -i ${1})
+filepath=$(git st | grep modified | awk -F" " '{print $2}' | grep -i ${1})
 if [ ! -z "${filepath}" ]
 then
     git diff ${filepath}
+else
+    echo "Nothing to show."
 fi
