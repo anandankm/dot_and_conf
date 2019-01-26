@@ -21,7 +21,7 @@ set fo+=t
 set makeprg=ant
 set efm=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
 set background=dark
-let g:NERDTreeDirArrows=0
+" let g:NERDTreeDirArrows=0
 " %F - Add full filepath to the statusline
 " %l %c - Add line number and column number
 set statusline+=%F\ %l:%c
@@ -38,6 +38,9 @@ highlight PmenuSel ctermfg=white ctermbg=grey
 "map [1;5C <C-right>
 "imap [1;5C <C-right>
 "map <C-s-left> <C-W><
+
+map <C-K> :pyf /mathworks/hub/share/sbtools/release/R2018a.sbv1/external-apps/llvm/llvm-5.0.0/install/maci10p12-64/share/clang/clang-format.py<cr>
+imap <C-K> <c-o>:pyf /mathworks/hub/share/sbtools/release/R2018a.sbv1/external-apps/llvm/llvm-5.0.0/install/maci10p12-64/share/clang/clang-format.py<cr>
 
 map [1;6D <
 "map <C-s-right> <C-W>>
@@ -75,5 +78,13 @@ map <s-tab> :s/^    //<CR>
 
 if has("mac")
     " For MAC OSX, everything y, yy goes to clipboard
-    set clipboard=unnamed
+    "set clipboard=unnamed
 endif
+
+" --- Filter out .p files ---
+" let NERDTreeIgnore = ['\.p$']
+" 
+"
+" --- Sort files in the tree:  .p files ---
+" let NERDTreeSortOrder = ['\.p$']
+" 
