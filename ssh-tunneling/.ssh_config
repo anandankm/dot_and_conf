@@ -1,0 +1,18 @@
+# Goes into ~/.ssh/config
+
+# Hopper device
+Host hopper
+    HostName 3.132.115.144
+    User anandan 
+    IdentityFile /Users/anandan/.ssh/id_rsa
+
+# The other device behind hopper
+Host 10.0.2.167 
+  ProxyCommand ssh -q -W %h:%p hopper -fN
+  User otherDeviceUser
+  IdentityFile /Users/anandan/.ssh/otherDevice_ssh.pem
+  StrictHostKeyChecking no
+
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 10080
