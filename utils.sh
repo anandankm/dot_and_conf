@@ -2,8 +2,6 @@
 # Author: Anandan - andy@grooveshark.com
 #                 - andy.compeer@gmail.com
 
-. /home/data/bin/gs-specifics.sh
-
 function home_setup()
 {
     HOME=$(dirname $(readlink -f $0))

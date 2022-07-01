@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+
+import argparse
+from argparse import RawTextHelpFormatter
+import glob
+import os
+import sys
+from typing import List
+import shutil
+from multiprocessing.pool import Pool
+from functools import partial
+
+
+def move_file(source_file: str, dest_dir: str):
+    filename = os.path.basename(source_file)
+    dest_file = os.path.join(dest_dir, filename)
+    # shutil.move(src=source_file, dst=dest_file)
+    print(f"Source file: {source_file}, Dest file: {dest_file}")
+
+
+# Instantiate the parser
+def parse_args():
+    help_text = "Move files using multiple processes\n" \
+                + "Examples:\n" \
+                + "\t multimv -s \"$(pwd)/**/**/*\" -d /destination/directory\n" \
+                + "\t multimv -s \"$(pwd)/**/**/*.mp4\" -d /destination/directory\n" \
+                + "\t multimv -s \"$(pwd)/*.mp4\" -d /destination/directory\n"
+    parser = argparse.ArgumentParser(
+        description=help_text,
+        formatter_class=RawTextHelpFormatter)
+
+    source_list_group = parser.add_mutually_exclusive_group(required=True)
+    source_list_group.add_argument('-s', '--source-dir',
+                                   type=str,
+                                   help="Source directory for multimv")
+    source_list_group.add_argument('-l', '--source-file-list',
+                                   type=List[str],
+                                   help='Source file list for multimv')
+    destination_dir_group = parser.add_mutually_exclusive_group(required=True)
+    destination_dir_group.add_argument('-d', '--destination-dir',
+                                       type=str,
+                                       help='Destination directory for multimv')
+    return parser.parse_args()
+
+
+def main():
+    inputs = parse_args()
+    dest_dir = inputs.destination_dir
+    if not os.path.isdir(dest_dir):
+        sys.exit(f"--destination_dir {dest_dir} is not a directory.")
+    source_dir = inputs.source_dir
+    all_files = glob.glob(source_dir)
+
+    for source_file in all_files:
+        source_dir = os.path.dirname(source_file)
+        filename = os.path.basename(source_file)
+        print(os.path.join(source_dir, filename))
+
+    move_fn = partial(move_file, dest_dir=dest_dir)
+
+    with Pool(5) as p:
+        p.map(move_fn, all_files)
+
+
+if __name__ == '__main__':
+    main()
