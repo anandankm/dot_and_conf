@@ -44,3 +44,7 @@
 Icon?
 ehthumbs.db
 Thumbs.db
+
+# Virtual Environments #
+######################
+venv

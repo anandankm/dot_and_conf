@@ -9,6 +9,7 @@ from typing import List
 import shutil
 from multiprocessing.pool import Pool
 from functools import partial
+import tqdm
 
 
 def move_file(source_file: str, dest_dir: str):
@@ -22,8 +23,8 @@ def move_file(source_file: str, dest_dir: str):
 def parse_args():
     help_text = "Move files using multiple processes\n" \
                 + "Examples:\n" \
-                + "\t multimv -s \"$(pwd)/**/**/*\" -d /destination/directory\n" \
-                + "\t multimv -s \"$(pwd)/**/**/*.mp4\" -d /destination/directory\n" \
+                + "\t multimv -s \"$(pwd)\" -d /destination/directory\n" \
+                + "\t multimv -s \"$(pwd)/**/*.mp4\" -d /destination/directory\n" \
                 + "\t multimv -s \"$(pwd)/*.mp4\" -d /destination/directory\n"
     parser = argparse.ArgumentParser(
         description=help_text,
@@ -49,7 +50,8 @@ def main():
     if not os.path.isdir(dest_dir):
         sys.exit(f"--destination_dir {dest_dir} is not a directory.")
     source_dir = inputs.source_dir
-    all_files = glob.glob(source_dir)
+    all_files = glob.glob(source_dir, recursive=True)
+    print(all_files)
 
     for source_file in all_files:
         source_dir = os.path.dirname(source_file)
@@ -57,9 +59,11 @@ def main():
         print(os.path.join(source_dir, filename))
 
     move_fn = partial(move_file, dest_dir=dest_dir)
-
-    with Pool(5) as p:
+    with Pool(processes=5) as p:
         p.map(move_fn, all_files)
+
+    # for _ in tqdm.tqdm(pool.imap_unordered(move_fn, all_files), total=len(all_files)):
+    #     pass
 
 
 if __name__ == '__main__':
